@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EL Kayán - برمجة احترافية</title>
+    
+    <link rel="icon" href="لوجو.jpg" type="image/jpeg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ------------------------------------------------------------------- */
+        /* الألوان الأساسية والثوابت */
+        /* ------------------------------------------------------------------- */
+        :root {
+            --dark-background: #0d0d0d;       /* خلفية داكنة جداً (أكثر قتامة) */
+            --mid-dark: #1b1b1b;              /* خلفية العناصر */
+            --light-grey: #e0e0e0;            /* لون النص الأساسي */
+            --accent-blue: #00bcd4;           /* أزرق ساطع/نيون (الأصلي) */
+            --hover-blue: #00e5ff;
+            --strong-glow: 0 0 15px rgba(0, 188, 212, 0.8), 0 0 5px #fff; /* ظل نيون قوي */
+            --subtle-glow: 0 0 8px rgba(0, 188, 212, 0.5); /* ظل نيون خفيف */
+            --font-main: 'Tajawal', sans-serif; 
+            --font-secondary: 'Cairo', sans-serif;
+            --header-height: 70px; /* تقليل ارتفاع الهيدر */
+        }
+
+        /* ------------------------------------------------------------------- */
+        /* تنسيق الجسم والخلفية */
+        /* ------------------------------------------------------------------- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main); 
+            background-color: var(--dark-background);
+            color: var(--light-grey);
+            line-height: 1.8;
+            text-align: right;
+            transition: background-color 0.5s; 
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* خلفية الصورة مع تظليل احترافي */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('لوجو.jpg'); 
+            background-size: cover; 
+            background-repeat: no-repeat;
+            background-position: center top; 
+            background-attachment: fixed;
+            /* طبقة تظليل داكنة شفافة جداً فوق الخلفية */
+            background-color: rgba(0, 0, 0, 0.95); 
+            z-index: -1;
+            /* فلتر طمس خفيف للخلفية */
+            filter: blur(2px) opacity(0.5); 
+            transition: all 0.5s;
+        }
+
+        /* طبقة تظليل إضافية لزيادة وضوح النصوص */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* طبقة شفافة لزيادة العزل */
+            z-index: -2;
+        }
+        
+        /* ------------------------------------------------------------------- */
+        /* الشريط العلوي (Header/Navbar) */
+        /* ------------------------------------------------------------------- */
+        header {
+            background-color: rgba(27, 27, 27, 0.95); /* شفافية بسيطة */
+            height: var(--header-height);
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-blue); 
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 12px; 
+            align-items: center; 
+        }
+
+        .logo-title {
+            font-family: var(--font-secondary);
+            font-size: 1.8em; 
+            font-weight: 900; 
+            color: var(--hover-blue);
+            text-shadow: var(--subtle-glow); 
+            letter-spacing: 1px;
+            cursor: default;
+        }
+
+        /* الأزرار والأيقونات الأساسية - تصميم دائري نيون */
+        .support-button, .lang-button, .social-icon {
+            background-color: transparent; 
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            cursor: pointer;
+            border-radius: 50%; 
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px; 
+            height: 38px; 
+            font-size: 1.1em;
+            text-decoration: none;
+        }
+
+        .lang-button {
+            border-radius: 6px; 
+            width: auto;
+            height: auto;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+
+        .support-button:hover, 
+        .lang-button:hover, 
+        .social-icon:hover {
+            background-color: var(--accent-blue);
+            color: var(--dark-background);
+            box-shadow: var(--strong-glow);
+            transform: scale(1.1);
+        }
+        
+        /* أيقونات السوشيال ميديا */
+        .social-icon i { color: inherit; }
+        a[title="فيسبوك"]:hover { background-color: #1877f2; border-color: #1877f2; }
+        a[title="إنستغرام"]:hover { background-image: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); border-color: transparent; color: white; }
+
+        /* ------------------------------------------------------------------- */
+        /* قسم الخدمات (Services) */
+        /* ------------------------------------------------------------------- */
+        .services {
+            padding: 100px 5% 120px; 
+            text-align: center;
+        }
+
+        .services h2 {
+            font-family: var(--font-secondary);
+            font-size: 4em;
+            color: white;
+            margin-bottom: 70px;
+            font-weight: 900;
+            text-shadow: var(--strong-glow);
+            position: relative;
+            letter-spacing: 2px;
+        }
+        
+        .services h2 span {
+            color: var(--accent-blue) !important;
+        }
+
+        .services h2::after {
+            content: '';
+            position: absolute;
+            bottom: -25px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 150px;
+            height: 5px;
+            background-color: var(--hover-blue);
+            box-shadow: var(--subtle-glow);
+            border-radius: 5px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            text-align: right;
+        }
+
+        /* تنسيق البطاقات - تصميم زجاجي/نيون */
+        .service-card {
+            background-color: rgba(30, 30, 30, 0.85); 
+            padding: 35px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 188, 212, 0.2); 
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            opacity: 0; 
+            cursor: pointer; 
+            backdrop-filter: blur(3px); /* تأثير زجاجي خفيف */
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 188, 212, 0.4);
+            background-color: rgba(35, 35, 35, 0.95); 
+            border-color: var(--accent-blue);
+        }
+        
+        .service-card h3 {
+            font-family: var(--font-secondary);
+            color: var(--hover-blue);
+            font-size: 1.6em;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid rgba(0, 188, 212, 0.3);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+        }
+
+        .service-card i {
+            margin-left: 15px;
+            font-size: 2em;
+            color: white; 
+            text-shadow: var(--subtle-glow); 
+        }
+        
+        .service-card p {
+            font-size: 1.05em;
+            color: var(--light-grey);
+            font-family: var(--font-main);
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* ------------------------------------------------------------------- */
+        /* قسم الختام (Final Message) - تصميم الفاصل */
+        /* ------------------------------------------------------------------- */
+        .final-message {
+            background-color: var(--mid-dark);
+            padding: 60px 5%;
+            text-align: center;
+            margin-top: 50px;
+            border-top: 5px double var(--accent-blue);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .final-message p {
+            font-size: 1.8em;
+            font-weight: 400;
+            color: white;
+            margin: 0;
+            animation: pulseText 3s infinite alternate;
+        }
+
+        .final-message .highlight {
+            color: var(--accent-blue);
+            font-weight: 900;
+            text-shadow: var(--strong-glow);
+        }
+
+        /* ------------------------------------------------------------------- */
+        /* النوافذ المنبثقة (Modal) وتنسيقاتها */
+        /* ------------------------------------------------------------------- */
+        .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); padding-top: 20px; }
+        .modal-content { 
+            background-color: var(--mid-dark); 
+            margin: 3% auto; 
+            padding: 40px; 
+            border: 3px solid var(--accent-blue); 
+            width: 90%; 
+            max-width: 550px; 
+            border-radius: 15px; 
+            position: relative; 
+            box-shadow: var(--strong-glow); 
+            animation: slideIn 0.5s ease-out; 
+            text-align: right; 
+            box-shadow: 0 0 25px rgba(0, 188, 212, 0.7);
+        }
+        
+        .modal-input-group select,
+        .modal-input-group input, 
+        .modal-input-group textarea { 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 25px; 
+            background-color: #252525; 
+            color: white; 
+            border: 1px solid var(--accent-blue); 
+            border-radius: 10px; 
+            font-family: var(--font-main); 
+            font-size: 1.1em; 
+            box-sizing: border-box; 
+            transition: all 0.3s;
+        }
+        .modal-input-group input:focus, 
+        .modal-input-group textarea:focus,
+        .modal-input-group select:focus {
+            border-color: var(--hover-blue);
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+            outline: none;
+        }
+
+        .modal-input-group label { 
+            display: block; 
+            margin-bottom: 10px; 
+            color: var(--hover-blue); 
+            font-weight: 700; 
+            font-family: var(--font-secondary); 
+            font-size: 1.1em;
+            text-shadow: 0 0 3px rgba(0, 188, 212, 0.5);
+        }
+        .modal-input-group textarea { min-height: 150px; resize: vertical; }
+        .close-btn { 
+            color: var(--accent-blue); 
+            float: left; 
+            font-size: 40px; 
+            font-weight: bold; 
+            line-height: 1;
+            transition: all 0.3s; 
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+        .close-btn:hover, .close-btn:focus { color: white; cursor: pointer; text-shadow: var(--strong-glow); transform: rotate(90deg); }
+        .modal-content h3 { 
+            color: white; 
+            border-bottom: 4px double var(--accent-blue); 
+            padding-bottom: 15px; 
+            margin-bottom: 30px; 
+            text-shadow: var(--subtle-glow); 
+            font-family: var(--font-secondary);
+        }
+        .confirm-btn { 
+            background-color: var(--accent-blue); 
+            color: var(--dark-background); 
+            padding: 15px 40px; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 800; 
+            font-size: 1.1em;
+            transition: all 0.3s ease-out; 
+            display: inline-block; 
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.5); 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .confirm-btn:hover { 
+            background-color: var(--hover-blue); 
+            box-shadow: var(--strong-glow); 
+            transform: translateY(-2px) scale(1.02); 
+        }
+
+        /* تنسيقات اللغة الإنجليزية */
+        [lang="en"] .services-grid { text-align: left; }
+        [lang="en"] .service-card { border-left: 5px solid var(--accent-blue); border-right: none; }
+        [lang="en"] .service-card i { margin-right: 15px; margin-left: 0; }
+        [lang="en"] .modal-content { text-align: left; }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .service-card:nth-child(1) { animation-delay: 0.1s; animation: fadeIn 1s ease-out forwards; }
+        .service-card:nth-child(2) { animation-delay: 0.3s; animation: fadeIn 1s ease-out forwards; }
+        .service-card:nth-child(3) { animation-delay: 0.5s; animation: fadeIn 1s ease-out forwards; }
+        .service-card:nth-child(4) { animation-delay: 0.7s; animation: fadeIn 1s ease-out forwards; }
+        .service-card:nth-child(5) { animation-delay: 0.9s; animation: fadeIn 1s ease-out forwards; }
+
+        @keyframes pulseText { 
+            0% { text-shadow: 0 0 5px rgba(0, 188, 212, 0.5); } 
+            100% { text-shadow: 0 0 20px rgba(0, 188, 212, 1); } 
+        }
+        @keyframes slideIn { 
+            from { transform: translateY(-70px); opacity: 0; } 
+            to { transform: translateY(0); opacity: 1; } 
+        }
+    </style>
+</head>
+<body lang="ar" dir="rtl">
+
+    <header>
+        <div class="logo-title">EL KAYÁN</div>
+        <div class="header-actions">
+            <a href="https://www.facebook.com/share/1CZNUyG2BT/" target="_blank" class="social-icon" title="فيسبوك">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.instagram.com/elkayanmedina?igsh=MWhuMTYwczc3b2hxMA==" target="_blank" class="social-icon" title="إنستغرام">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" id="supportBtn" class="support-button" title="شات الدعم">
+                <i class="fas fa-headset"></i> 
+            </a>
+            <button id="langToggleBtn" class="lang-button" title="Translate to English">
+                <i class="fas fa-globe"></i> EN
+            </button>
+        </div>
+    </header>
+
+    <section class="services" id="content-ar">
+        <h2><span style="color: var(--accent-blue);">EL Kayán</span></h2>
+        
+        <div class="services-grid">
+            
+            <div class="service-card" data-service-name="تصميم وتطوير المواقع الاحترافية">
+                <h3><i class="fas fa-desktop"></i> تصميم وتطوير المواقع الاحترافية</h3>
+                <p>تأسيس حضورك الرقمي القوي! نعمل على بناء موقع إلكتروني مريح ومحترف خصيصاً لمحلّك أو صفحتك. تصميم عصري وفعال مُحسَّن لزيادة تفاعل العملاء والمساهمة المباشرة في رفع مستوى مبيعاتك.</p>
+            </div>
+
+            <div class="service-card" data-service-name="إنشاء المتاجر الإلكترونية المتكاملة">
+                <h3><i class="fas fa-store"></i> إنشاء المتاجر الإلكترونية المتكاملة</h3>
+                <p>نُنشئ لك متجر إلكتروني متكامل واحترافي لمنتجاتك. نوفر لك نظاماً يتيح لك متابعة وإدارة جميع طلباتك (الأوردرات) وتفاصيل المخزون والتقارير المالية بكفاءة وسهولة.</p>
+            </div>
+
+            <div class="service-card" data-service-name="تصميم الهوية والشعار (اللوجو)">
+                <h3><i class="fas fa-paint-brush"></i> تصميم الهوية والشعار (اللوجو)</h3>
+                <p>هويتك البصرية هي بصمتك! نصمم لك لوجو (شعار) لبراندك الخاص بأسلوب فني واحترافي يرسخ قيمة ورسالة عملك في أذهان العملاء، مما يمنح علامتك التجارية مظهراً فريداً وموثوقاً.</p>
+            </div>
+
+            <div class="service-card" data-service-name="إدارة حملات التسويق الرقمي">
+                <h3><i class="fas fa-bullhorn"></i> إدارة حملات التسويق الرقمي</h3>
+                <p>نصمم ونُعد صفحة (بيدج) احترافية لعملك على شبكات التواصل الاجتماعي. نضع استراتيجيات متقدمة لإدارة محتواك وضمان استهداف العملاء المثاليين الذين لديهم أعلى احتمالية للشراء والتفاعل مع خدماتك.</p>
+            </div>
+
+            <div class="service-card" data-service-name="خدمات النمو الاجتماعي والمتابعين">
+                <h3><i class="fas fa-users"></i> خدمات النمو الاجتماعي والمتابعين</h3>
+                <p>عزز مدى وصولك وتأثيرك! نقدم حلولاً آمنة وفعالة لزيادة عدد المتابعين لحساباتك على جميع المنصات، سواء كان استهدافك للجمهور المصري أو الأجنبي، لضمان نمو حقيقي ومستدام لعلامتك التجارية.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="final-message" id="footer-ar">
+        <p>
+            <span class="highlight">EL Kayán</span> جاهزون لخدمتك في أي وقت، <br> وهدفنا الأساسي هو <span class="strong-text">مساعدتك والوصول بك لهدفك</span>.
+        </p>
+    </section>
+    
+    <section class="services" id="content-en" style="display:none; text-align:left;">
+        <h2 style="text-align:center;"><span style="color: var(--accent-blue);">EL Kayán</span></h2>
+        
+        <div class="services-grid">
+            
+            <div class="service-card" data-service-name="Professional Website Design & Development">
+                <h3><i class="fas fa-desktop"></i> Professional Website Design & Development</h3>
+                <p>Establish your strong digital presence! We build a comfortable and professional website tailored for your store or page. Modern design optimized to increase customer engagement and directly contribute to boosting your sales.</p>
+            </div>
+
+            <div class="service-card" data-service-name="Integrated E-commerce Store Creation">
+                <h3><i class="fas fa-store"></i> Integrated E-commerce Store Creation</h3>
+                <p>We create a complete and professional online store for your products. We provide a system that allows you to monitor and manage all your orders, inventory details, and financial reports efficiently and easily.</p>
+            </div>
+
+            <div class="service-card" data-service-name="Brand Identity and Logo Design">
+                <h3><i class="fas fa-paint-brush"></i> Brand Identity and Logo Design</h3>
+                <p>Your visual identity is your fingerprint! We design a logo for your brand with an artistic and professional style that reflects your business's value and message, giving your brand a unique and trustworthy look.</p>
+            </div>
+
+            <div class="service-card" data-service-name="Digital Marketing Campaign Management">
+                <h3><i class="fas fa-bullhorn"></i> Digital Marketing Campaign Management</h3>
+                <p>We design and prepare a professional page for your business on social media platforms. We implement advanced strategies to manage your content and ensure targeting ideal customers with the highest potential for purchase and interaction with your services.</p>
+            </div>
+
+            <div class="service-card" data-service-name="Social Growth & Follower Services">
+                <h3><i class="fas fa-users"></i> Social Growth & Follower Services</h3>
+                <p>Boost your reach and influence! We offer safe and effective solutions for increasing the number of followers across all platforms, whether you target the Egyptian or international audience, ensuring real and sustainable growth for your brand.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="final-message" id="footer-en" style="display:none; text-align:left;">
+        <p>
+            <span class="highlight">EL Kayán</span> is ready to serve you at any time, <br> and our main goal is to <span class="strong-text">help you achieve your targets</span>.
+        </p>
+    </section>
+
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeServiceModal">&times;</span>
+            <h3 id="service-modal-title">طلب خدمة: </h3>
+            <p id="service-modal-desc" style="color: var(--light-grey);">الرجاء ملء البيانات التالية لإتمام طلبك. سيتم إرسالها إلينا مباشرة عبر الواتساب للمتابعة.</p>
+            
+            <div class="modal-input-group">
+                <label for="clientNameService" id="label-name-service">الاسم:</label>
+                <input type="text" id="clientNameService" placeholder="الاسم الكامل أو اسم الشركة" required>
+            </div>
+
+            <div class="modal-input-group">
+                <label for="clientPhoneService" id="label-phone-service">رقم هاتفك (واتساب):</label>
+                <input type="tel" id="clientPhoneService" placeholder="01XXXXXXXXX" required>
+            </div>
+            
+            <div class="modal-input-group">
+                <label for="clientAddressService" id="label-address-service">العنوان (المدينة/المنطقة):</label>
+                <input type="text" id="clientAddressService" placeholder="مثال: القاهرة، مدينة نصر" required>
+            </div>
+
+            <div class="modal-input-group">
+                <label for="deliveryTime" id="label-delivery">وقت التسليم المتوقع:</label>
+                <select id="deliveryTime" required>
+                    </select>
+            </div>
+
+            <div class="modal-input-group">
+                <label for="paymentMethod" id="label-payment">وسيلة الدفع:</label>
+                <select id="paymentMethod" required>
+                    </select>
+            </div>
+            
+            <div class="modal-input-group">
+                <label for="issueTextService" id="label-issue-service">وصف الخدمة المطلوبة:</label>
+                <textarea id="issueTextService" placeholder="اكتب وصفاً مفصلاً لطلبك وما تحتاجه بالتحديد..."></textarea>
+            </div>
+            
+            <a href="#" id="whatsappServiceLink" class="confirm-btn">تأكيد الطلب</a>
+        </div>
+    </div>
+
+    <div id="supportModal" class="modal">
+        <div class="modal-content" id="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h3 id="modal-title">خدمة شات الدعم الفني</h3>
+            <p id="modal-desc" style="color: var(--light-grey);">الرجاء كتابة اسمك، رقم هاتفك، واستفسارك بالتفصيل. سيتم إرسالها إلينا مباشرة عبر الواتساب، وسنتواصل معك فوراً.</p>
+            <div class="modal-input-group"><label for="clientName" id="label-name">الاسم:</label><input type="text" id="clientName" placeholder="الاسم ثلاثي أو اسم الشركة" required></div>
+            <div class="modal-input-group"><label for="clientPhone" id="label-phone">رقم هاتفك:</label><input type="tel" id="clientPhone" placeholder="01XXXXXXXXX" required></div>
+            <div class="modal-input-group"><label for="issueText" id="label-issue">الاستفسار/المشكلة:</label><textarea id="issueText" placeholder="اكتب مشكلتك هنا بالتفصيل..."></textarea></div>
+            <a href="#" id="whatsappLink" class="confirm-btn">تأكيد الشكوى</a>
+        </div>
+    </div>
+
+
+    <script>
+        // الرقم المخصص لطلبات الخدمات (الجديد)
+        const WHATSAPP_NUMBER_SERVICE = "201110732364"; 
+        // الرقم المخصص للدعم العام (القديم)
+        const WHATSAPP_NUMBER_SUPPORT = "201288018240"; 
+        const SUPPORT_NUMBERS = [WHATSAPP_NUMBER_SUPPORT]; 
+
+        // متغيرات اللغة والـ Dom
+        const body = document.querySelector('body');
+        const langToggleBtn = document.getElementById('langToggleBtn');
+        const serviceCards = document.querySelectorAll('.service-card');
+
+        // متغيرات الدعم الفني القديم
+        const supportModal = document.getElementById("supportModal");
+        const supportBtn = document.getElementById("supportBtn");
+        const closeModal = document.getElementById("closeModal");
+        const clientName = document.getElementById("clientName");
+        const clientPhone = document.getElementById("clientPhone");
+        const issueTextarea = document.getElementById("issueText");
+        const whatsappLink = document.getElementById("whatsappLink");
+
+        // متغيرات طلب الخدمة الجديد
+        const serviceModal = document.getElementById("serviceModal");
+        const closeServiceModal = document.getElementById("closeServiceModal");
+        const serviceModalTitle = document.getElementById("service-modal-title");
+        const clientNameService = document.getElementById("clientNameService");
+        const clientPhoneService = document.getElementById("clientPhoneService");
+        const clientAddressService = document.getElementById("clientAddressService");
+        const issueTextService = document.getElementById("issueTextService");
+        const deliveryTimeSelect = document.getElementById("deliveryTime");
+        const paymentMethodSelect = document.getElementById("paymentMethod"); 
+        const whatsappServiceLink = document.getElementById("whatsappServiceLink");
+        
+        // ===========================================
+        // النصوص المترجمة
+        // ===========================================
+        const translations = {
+            ar: {
+                modalTitle: "خدمة شات الدعم الفني",
+                modalDesc: "الرجاء كتابة اسمك، رقم هاتفك، واستفسارك بالتفصيل. سيتم إرسالها إلينا مباشرة عبر الواتساب، وسنتواصل معك فوراً.",
+                labelName: "الاسم:",
+                labelPhone: "رقم هاتفك:",
+                labelIssue: "الاستفسار/المشكلة:",
+                namePlaceholder: "الاسم ثلاثي أو اسم الشركة",
+                phonePlaceholder: "01XXXXXXXXX",
+                issuePlaceholder: "اكتب مشكلتك هنا بالتفصيل...",
+                confirmBtn: "تأكيد الشكوى",
+                whatsappMsgSupport: "طلب دعم من موقع EL Kayán (عام):\nالاسم: {name}\nالهاتف: {phone}\nالاستفسار: {issue}",
+
+                serviceModalTitle: "طلب خدمة: {service}",
+                serviceModalDesc: "الرجاء ملء البيانات التالية لإتمام طلبك. سيتم إرسالها إلينا مباشرة عبر الواتساب للمتابعة.",
+                labelNameService: "الاسم:",
+                labelPhoneService: "رقم هاتفك (واتساب):",
+                labelAddressService: "العنوان (المدينة/المنطقة):",
+                labelIssueService: "وصف الخدمة المطلوبة:",
+                labelDelivery: "وقت التسليم المتوقع:",
+                labelPayment: "وسيلة الدفع:", 
+                addressPlaceholder: "مثال: القاهرة، مدينة نصر",
+                issueServicePlaceholder: "اكتب وصفاً مفصلاً لطلبك وما تحتاجه بالتحديد...",
+                confirmServiceBtn: "تأكيد الطلب",
+                deliveryOptions: [
+                    { value: "1 day", text: "يوم واحد" },
+                    { value: "2 days", text: "يومان" },
+                    { value: "1 week", text: "أسبوع" },
+                    { value: "2 weeks", text: "أسبوعان" },
+                    { value: "1 month", text: "شهر" },
+                    { value: "custom", text: "مدة مخصصة (اكتبها في الوصف)" }
+                ],
+                // خيارات الدفع الجديدة مع أيقونات بسيطة
+                paymentOptions: [
+                    { value: "", text: "اختر طريقة الدفع المفضلة لديك" },
+                    { value: "vodafone_cash", text: "📱 فودافون كاش" },
+                    { value: "orange_cash", text: "📱 أورانج كاش" },
+                    { value: "etisalat_cash", text: "📱 اتصالات كاش" },
+                    { value: "visa_master", text: "💳 فيزا / ماستركارد" },
+                    { value: "instapay", text: "💰 انستا باي" }
+                ],
+                whatsappMsgService: "⭐️ *طلب خدمة جديد* ⭐️\n*الخدمة:* {service}\n*الاسم:* {name}\n*الهاتف:* {phone}\n*العنوان:* {address}\n*وقت التسليم:* {delivery}\n*وسيلة الدفع:* {payment}\n*الوصف:* {issue}"
+            },
+            en: {
+                modalTitle: "Technical Support Chat Service",
+                modalDesc: "Please enter your name, phone number, and issue in detail. It will be sent directly to us via WhatsApp, and we will contact you immediately.",
+                labelName: "Name:",
+                labelPhone: "Your Phone Number:",
+                labelIssue: "Inquiry/Issue:",
+                namePlaceholder: "Full Name or Company Name",
+                phonePlaceholder: "+20XXXXXXXXXX",
+                issuePlaceholder: "Write your issue in detail here...",
+                confirmBtn: "Confirm Complaint",
+                whatsappMsgSupport: "Support Request from EL Kayán Website (General):\nName: {name}\nPhone: {phone}\nInquiry: {issue}",
+
+                serviceModalTitle: "Service Request: {service}",
+                serviceModalDesc: "Please fill in the following details to complete your request. It will be sent directly to us via WhatsApp for follow-up.",
+                labelNameService: "Name:",
+                labelPhoneService: "Your Phone Number (WhatsApp):",
+                labelAddressService: "Address (City/Area):",
+                labelIssueService: "Description of Required Service:",
+                labelDelivery: "Estimated Delivery Time:",
+                labelPayment: "Payment Method:", 
+                addressPlaceholder: "Example: Cairo, Nasr City",
+                issueServicePlaceholder: "Write a detailed description of your request and what you specifically need...",
+                confirmServiceBtn: "Confirm Request",
+                deliveryOptions: [
+                    { value: "1 day", text: "1 Day" },
+                    { value: "2 days", text: "2 Days" },
+                    { value: "1 week", text: "1 Week" },
+                    { value: "2 weeks", text: "2 Weeks" },
+                    { value: "1 month", text: "1 Month" },
+                    { value: "custom", text: "Custom duration (specify in description)" }
+                ],
+                // خيارات الدفع الجديدة
+                paymentOptions: [
+                    { value: "", text: "Choose your preferred payment method" },
+                    { value: "vodafone_cash", text: "📱 Vodafone Cash" },
+                    { value: "orange_cash", text: "📱 Orange Cash" },
+                    { value: "etisalat_cash", text: "📱 Etisalat Cash" },
+                    { value: "visa_master", text: "💳 Visa / MasterCard" },
+                    { value: "instapay", text: "💰 InstaPay" }
+                ],
+                whatsappMsgService: "⭐️ *New Service Request* ⭐️\n*Service:* {service}\n*Name:* {name}\n*Phone:* {phone}\n*Address:* {address}\n*Delivery Time:* {delivery}\n*Payment Method:* {payment}\n*Description:* {issue}"
+            }
+        };
+
+        // ===========================================
+        // الدوال المساعدة وتحديث النصوص
+        // ===========================================
+
+        function updateModalText(lang, modalId) {
+            const tr = translations[lang];
+            if (modalId === 'supportModal') {
+                document.getElementById('modal-title').textContent = tr.modalTitle;
+                document.getElementById('modal-desc').textContent = tr.modalDesc;
+                document.getElementById('label-name').textContent = tr.labelName;
+                document.getElementById('label-phone').textContent = tr.labelPhone;
+                document.getElementById('label-issue').textContent = tr.labelIssue;
+                document.querySelector('#supportModal .confirm-btn').textContent = tr.confirmBtn;
+                clientName.setAttribute('placeholder', tr.namePlaceholder);
+                clientPhone.setAttribute('placeholder', tr.phonePlaceholder);
+                issueTextarea.setAttribute('placeholder', tr.issuePlaceholder);
+            } else if (modalId === 'serviceModal') {
+                document.getElementById('service-modal-desc').textContent = tr.serviceModalDesc;
+                document.getElementById('label-name-service').textContent = tr.labelNameService;
+                document.getElementById('label-phone-service').textContent = tr.labelPhoneService;
+                document.getElementById('label-address-service').textContent = tr.labelAddressService;
+                document.getElementById('label-issue-service').textContent = tr.labelIssueService;
+                document.getElementById('label-delivery').textContent = tr.labelDelivery;
+                document.getElementById('label-payment').textContent = tr.labelPayment; // التسمية الجديدة
+                whatsappServiceLink.textContent = tr.confirmServiceBtn;
+                clientNameService.setAttribute('placeholder', tr.namePlaceholder);
+                clientPhoneService.setAttribute('placeholder', tr.phonePlaceholder);
+                clientAddressService.setAttribute('placeholder', tr.addressPlaceholder);
+                issueTextService.setAttribute('placeholder', tr.issueServicePlaceholder);
+
+                // تحديث قائمة التسليم
+                deliveryTimeSelect.innerHTML = '';
+                tr.deliveryOptions.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.value;
+                    opt.textContent = option.text;
+                    deliveryTimeSelect.appendChild(opt);
+                });
+                
+                // تحديث قائمة وسائل الدفع (الجديدة)
+                paymentMethodSelect.innerHTML = '';
+                tr.paymentOptions.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.value;
+                    opt.textContent = option.text;
+                    paymentMethodSelect.appendChild(opt);
+                });
+            }
+        }
+
+        // تحديث النصوص الأولية عند التحميل
+        updateModalText(body.getAttribute('lang'), 'supportModal');
+        updateModalText(body.getAttribute('lang'), 'serviceModal');
+
+
+        // ===========================================
+        // وظائف تبديل اللغة وفتح وغلق النوافذ المنبثقة
+        // ===========================================
+
+        langToggleBtn.onclick = function() {
+            const isEnglish = body.getAttribute('lang') === 'ar';
+            const lang = isEnglish ? 'en' : 'ar';
+            
+            body.setAttribute('lang', lang);
+            body.setAttribute('dir', isEnglish ? 'ltr' : 'rtl');
+            document.getElementById('content-ar').style.display = isEnglish ? 'none' : 'block';
+            document.getElementById('footer-ar').style.display = isEnglish ? 'none' : 'block';
+            document.getElementById('content-en').style.display = isEnglish ? 'block' : 'none';
+            document.getElementById('footer-en').style.display = isEnglish ? 'block' : 'none';
+            langToggleBtn.setAttribute('title', isEnglish ? 'الترجمة للعربية' : 'Translate to English');
+            langToggleBtn.innerHTML = `<i class="fas fa-globe"></i> ${isEnglish ? 'AR' : 'EN'}`;
+
+            updateModalText(lang, 'supportModal');
+            updateModalText(lang, 'serviceModal');
+        };
+
+        // فتح مودال الدعم القديم (زر السماعة)
+        supportBtn.onclick = function(e) {
+            e.preventDefault(); 
+            serviceModal.style.display = "none";
+            supportModal.style.display = "block";
+            clientName.focus();
+        }
+
+        // غلق مودال الدعم القديم
+        closeModal.onclick = function() { supportModal.style.display = "none"; }
+        
+        // غلق مودال طلب الخدمة الجديد
+        closeServiceModal.onclick = function() { serviceModal.style.display = "none"; }
+
+        // غلق أي مودال عند الضغط خارجها
+        window.onclick = function(event) {
+            if (event.target == supportModal) { supportModal.style.display = "none"; }
+            if (event.target == serviceModal) { serviceModal.style.display = "none"; }
+        }
+
+        // ===========================================
+        // وظائف طلب الخدمة (Service Card Click Handler)
+        // ===========================================
+
+        serviceCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const serviceName = this.getAttribute('data-service-name');
+                const currentLang = body.getAttribute('lang');
+                const tr = translations[currentLang];
+
+                // تعبئة عنوان المودال باسم الخدمة
+                serviceModalTitle.innerHTML = tr.serviceModalTitle.replace("{service}", ` <span style="color:var(--accent-blue);">${serviceName}</span>`);
+                
+                // تخزين اسم الخدمة في زر الإرسال
+                whatsappServiceLink.setAttribute('data-service', serviceName);
+
+                // فتح المودال الجديد وإغلاق القديم
+                supportModal.style.display = "none";
+                serviceModal.style.display = "block";
+                clientNameService.focus();
+            });
+        });
+
+
+        // ===========================================
+        // وظيفة إرسال طلب الخدمة عبر واتساب (الجديدة)
+        // ===========================================
+        whatsappServiceLink.onclick = function(e) {
+            e.preventDefault(); 
+
+            const currentLang = body.getAttribute('lang');
+            const tr = translations[currentLang];
+            
+            // قراءة القيم
+            const service = this.getAttribute('data-service');
+            const name = clientNameService.value.trim() || (currentLang === 'ar' ? "غير مُدخل" : "Not entered");
+            const phone = clientPhoneService.value.trim() || (currentLang === 'ar' ? "غير مُدخل" : "Not entered");
+            const address = clientAddressService.value.trim() || (currentLang === 'ar' ? "غير مُدخل" : "Not entered");
+            const delivery = deliveryTimeSelect.options[deliveryTimeSelect.selectedIndex].text;
+            const payment = paymentMethodSelect.options[paymentMethodSelect.selectedIndex].text; // قراءة وسيلة الدفع الجديدة
+            const issue = issueTextService.value.trim() || (currentLang === 'ar' ? "لم يتم كتابة وصف" : "No description written");
+            
+            // التحقق من اختيار وسيلة دفع (لأنها حقل أساسي الآن)
+             if (paymentMethodSelect.value === "") {
+                alert(currentLang === 'ar' ? "الرجاء اختيار وسيلة دفع لإتمام الطلب." : "Please select a payment method to complete the request.");
+                paymentMethodSelect.focus();
+                return; 
+            }
+
+            // تجهيز نص الرسالة النهائي
+            const finalMessage = tr.whatsappMsgService
+                .replace("{service}", service)
+                .replace("{name}", name)
+                .replace("{phone}", phone)
+                .replace("{address}", address)
+                .replace("{delivery}", delivery)
+                .replace("{payment}", payment) // تضمين وسيلة الدفع
+                .replace("{issue}", issue);
+                
+            const encodedText = encodeURIComponent(finalMessage);
+            const finalLink = `https://wa.me/${WHATSAPP_NUMBER_SERVICE}?text=${encodedText}`;
+            
+            window.open(finalLink, '_blank');
+
+            // إغلاق المودال وتصفير الحقول بعد الإرسال
+            serviceModal.style.display = "none";
+            clientNameService.value = '';
+            clientPhoneService.value = '';
+            clientAddressService.value = '';
+            issueTextService.value = '';
+            // إعادة تعيين الخيارات إلى أول خيار غير صالح
+            deliveryTimeSelect.value = deliveryTimeSelect.options[0].value;
+            paymentMethodSelect.value = paymentMethodSelect.options[0].value; 
+        }
+
+        // ===========================================
+        // وظيفة إرسال الدعم (القديمة)
+        // ===========================================
+        whatsappLink.onclick = function(e) {
+            e.preventDefault(); 
+            
+            const currentLang = body.getAttribute('lang');
+            const tr = translations[currentLang];
+            
+            const name = clientName.value.trim() || (currentLang === 'ar' ? "غير مُدخل" : "Not entered");
+            const phone = clientPhone.value.trim() || (currentLang === 'ar' ? "غير مُدخل" : "Not entered");
+            const issue = issueTextarea.value.trim() || (currentLang === 'ar' ? "لم يتم كتابة استفسار" : "No inquiry written");
+            
+            const finalMessage = tr.whatsappMsgSupport
+                .replace("{name}", name)
+                .replace("{phone}", phone)
+                .replace("{issue}", issue);
+                
+            const encodedText = encodeURIComponent(finalMessage);
+            
+            SUPPORT_NUMBERS.forEach(number => {
+                const finalLink = `https://wa.me/${number}?text=${encodedText}`;
+                window.open(finalLink, '_blank');
+            });
+
+            // إغلاق المودال وتصفير الحقول
+            supportModal.style.display = "none";
+            clientName.value = '';
+            clientPhone.value = '';
+            issueTextarea.value = '';
+        }
+    </script>
+
+</body>
+</html>
